@@ -14,6 +14,11 @@ public class Main {
         String input = scan.nextLine();
         input = input.toUpperCase().replaceAll(" ", "");
 
+        String inp = input;
+        if (isNegative(input)){
+            inp = input.substring(1);
+        }
+
         for (int i = 0; i < input.length(); i++){
             op = switch (input.charAt(i)) {
                 case '+' -> '+';
@@ -27,7 +32,7 @@ public class Main {
             System.out.println("Введен неверный знак!");
         }else {
 
-            String[] arrayVal = input.split("[-+/*]");
+            String[] arrayVal = inp.split("[-+/*]");
             if (arrayVal.length > 2){
                 System.out.println("Вы ввели больше двух чисел!");
             }else {
@@ -35,7 +40,7 @@ public class Main {
                 val1 = arrayVal[0];
                 val2 = arrayVal[1];
 
-                if (isRoman(val1, val2)) {
+                if (isRoman(val1, val2) & !isNegative(input)) {
 
                     ToArab num1 = ToArab.valueOf(val1);
                     ToArab num2 = ToArab.valueOf(val2);
@@ -58,7 +63,7 @@ public class Main {
                     resultRoman = ToRoman.valueOf(resultArab).getRoman();
                     System.out.println(resultRoman);
 
-                } else {
+                } else if (!isRoman(val1, val2) & !isNegative(input)) {
 
                     int number1 = 0;
                     int number2 = 0;
@@ -76,8 +81,35 @@ public class Main {
                         resultArab = calc(number1, number2, op);
                         System.out.println(resultArab);
                     }
+                } else if (!isRoman(val1,val2) & isNegative(input)) {
+                    int number1 = 0;
+                    int number2 = 0;
+                    try {
+                        number1 = Integer.parseInt(val1);
+                        number2 = Integer.parseInt(val2);
+                    } catch (NumberFormatException n) {
+                        System.out.println("Неверное выражение!");
+                        return;
+                    }
+                    if (number1 > 10 | number2 > 10){
+                        System.out.println("Неверное выражение!");
+                    } else {
+
+                        resultArab = calc(-number1, number2, op);
+                        System.out.println(resultArab);
+                    }
+
+                } else {
+                    System.out.println("В римских числах отрицательных не существует");
                 }
             }
+        }
+    }
+    static boolean isNegative (String input){
+        if (input.substring(0,1).equalsIgnoreCase("-")){
+            return true;
+        } else {
+            return false;
         }
     }
 
